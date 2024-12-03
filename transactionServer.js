@@ -50,9 +50,8 @@ workbook.xlsx.readFile(spreadsheetLocation.location)
                     processedRows++;
                 } else {
                     //no results found
-                    let insertStatement = 'insert into transactions (id, item, cost, category, payment_method, date) values(?, ?, ?, ?, ?, ?)';
-                    console.log(`adding ${rowArray[0]}`)
-                    connection.query(insertStatement, [rowArray[0], rowArray[1], rowArray[2], rowArray[3], rowArray[4], rowArray[5]], function(error, results, fields) {
+                    let insertStatement = 'insert into transactions (id, item, cost, category, payment_method, date, notes) values(?, ?, ?, ?, ?, ?, ?)';
+                    connection.query(insertStatement, [rowArray[0], rowArray[1], rowArray[2], rowArray[3], rowArray[4], rowArray[5], rowArray[6]], function(error, results, fields) {
                         if (error) throw error;    
                     processedRows++;
                     if(processedRows == worksheet.rowCount-1){ 
