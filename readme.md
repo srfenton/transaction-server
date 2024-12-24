@@ -1,8 +1,4 @@
-Here’s the README content with the markdown syntax visible. Copy and paste this text into your README file to preserve the formatting:
-
-```markdown
 # Transactions Table Application
-
 This project is a web-based application for managing and displaying transactions in a tabular format. The application features a collapsible table that is collapsed by default and allows adding new transactions with ease.
 
 ## Features
