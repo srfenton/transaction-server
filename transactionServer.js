@@ -22,49 +22,59 @@ workbook.xlsx.readFile(spreadsheetLocation.location)
         // const worksheet = workbook.getWorksheet('Sheet1');
         const worksheet = workbook.worksheets[0];
         //the loop starts on 2 to avoid trying to process the header row
-        let processedRows = 0;
         console.log(`${worksheet.rowCount} is the row count`);
-        for (let i = 2; i < worksheet.rowCount+1; i++) { 
-            let rowArray = []
+
+        function processRow(i) {
+            let rowArray = [];
             const row = worksheet.getRow(i);
             row.eachCell({ includeEmpty: true }, function(cell, colNumber) {
-                rowArray.push(cell.value);    
+                rowArray.push(cell.value);
             });
-
             if(typeof rowArray[2] === 'object') {
                 rowArray[2] = rowArray[2]['result'];
             if( typeof rowArray[2] === 'undefined'){
                 rowArray[2] = 0;
             }
+            if(rowArray[1] === 'undefined'){
+                console.log('exiting due to empty item value');
+                process.exit(0);
+            }
             };
+
+            let date = rowArray[5];
+            let formattedDate = moment.utc(date).format('YYYY-MM-DD'); // Format to YYYY-MM-DD
             let duplicateCheckQuery = 'SELECT * FROM transactions WHERE id = ? AND cost = ?';
             connection.query(duplicateCheckQuery, [rowArray[0], rowArray[2]], function(error, results, fields) {
                 if (error) throw error;
-                if (results.length> 0) {
-                    //results found
-                    
-                    if(processedRows == worksheet.rowCount-1){ 
+                if (results.length > 0) {
+                    if (i === worksheet.rowCount) {
                         connection.end();
                         process.exit(0);
-                    } 
-                    processedRows++;
+                    }
                 } else {
-                    //no results found
-                    let insertStatement = 'insert into transactions (id, item, cost, category, payment_method, date, notes) values(?, ?, ?, ?, ?, ?, ?)';
-                    connection.query(insertStatement, [rowArray[0], rowArray[1], rowArray[2], rowArray[3], rowArray[4], rowArray[5], rowArray[6]], function(error, results, fields) {
-                        if (error) throw error;    
-                    processedRows++;
-                    if(processedRows == worksheet.rowCount-1){ 
-                        connection.end()
-                        process.exit(0)
-                    
-                        } 
+                    let insertStatement = 'INSERT INTO transactions (id, item, cost, category, payment_method, date, notes) VALUES(?, ?, ?, ?, ?, ?, ?)';
+                    connection.query(insertStatement, [rowArray[0], rowArray[1], rowArray[2], rowArray[3], rowArray[4], formattedDate, rowArray[6]], function(error, results, fields) {
+                        if (error) throw error;
+                        console.log(`row insterted for ${rowArray[1]}`)
+                        if (i === worksheet.rowCount-1) {
+                            connection.end();
+                            console.log('exited due to rowcount');
+                            process.exit(0);
+                        }
                     });
-                    
-                                        
                 }
-    
-            }); 
+            });
+        }
+        let processedRows = 0;
+        for (let i = 2; i < worksheet.rowCount+1; i++) { 
+            if(processedRows === worksheet.rowCount-1){ 
+                connection.end();
+                console.log('exiting from the outer loop')
+                process.exit(0);
+            } else {
+                processRow(i)
+                processedRows++;
+            }
         }
     })
     .catch(error => {
