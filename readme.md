@@ -1,3 +1,6 @@
+Here’s the README content with the markdown syntax visible. Copy and paste this text into your README file to preserve the formatting:
+
+```markdown
 # Transactions Table Application
 
 This project is a web-based application for managing and displaying transactions in a tabular format. The application features a collapsible table that is collapsed by default and allows adding new transactions with ease.
@@ -29,3 +32,41 @@ This project is a web-based application for managing and displaying transactions
        date DATE NOT NULL,
        notes TEXT
    );
+   ```
+
+3. Use the following structure in your `login.json` file:
+   ```json
+   {
+       "host": "your_host",
+       "user": "your_username",
+       "password": "your_password",
+       "database": "your_database_name"
+   }
+   ```
+
+4. Open the application in a web browser and use the **Toggle Transactions** button to display the transactions table.
+
+## Customization
+
+- The colors for the table header, toggle button, and add button can be customized in the CSS section of the `index.html` file.
+- Modify the SQL query in the PHP section to customize the transactions displayed.
+
+## Dependencies
+
+- **Bootstrap 3.3.7**: For styling the table and buttons.
+- A PHP-enabled web server.
+- MySQL database.
+
+## Notes
+
+- Make sure to secure your database credentials in `login.json` and restrict file access if deploying to a production server.
+- The table is collapsible and initially hidden for better user experience, especially when dealing with a large number of transactions.
+
+## Preview
+
+![Transactions Table Application](https://via.placeholder.com/800x400?text=Preview+Image)
+
+Enjoy managing your transactions with this simple and clean web application!
+```
+
+This will display correctly as markdown and retain all the formatting you need when viewed on platforms like GitHub or any markdown renderer.
