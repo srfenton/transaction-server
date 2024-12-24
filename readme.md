@@ -64,5 +64,3 @@ This project is a web-based application for managing and displaying transactions
 
 Enjoy managing your transactions with this simple and clean web application!
 ```
-
-This will display correctly as markdown and retain all the formatting you need when viewed on platforms like GitHub or any markdown renderer.
