@@ -57,10 +57,3 @@ This project is a web-based application for managing and displaying transactions
 
 - Make sure to secure your database credentials in `login.json` and restrict file access if deploying to a production server.
 - The table is collapsible and initially hidden for better user experience, especially when dealing with a large number of transactions.
-
-## Preview
-
-![Transactions Table Application](https://via.placeholder.com/800x400?text=Preview+Image)
-
-Enjoy managing your transactions with this simple and clean web application!
-```
