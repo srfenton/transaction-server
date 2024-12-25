@@ -89,14 +89,18 @@
 <body>
 
 <!-- Add Button -->
-<button class="add-button" onclick="alert('Add a new transaction!')">
+ <form action="/add_item.html">
+<button type ="submit" class="add-button">
     <i class="glyphicon glyphicon-plus"></i>
 </button>
+</form>
 
 <!-- Collapse Button -->
 <button class="toggle-button" style="display: block; margin: 0 auto; width: 80%;" data-toggle="collapse" data-target="#transactions-container">
     Transactions
 </button>
+
+<br><p id="confirmDeleteButton" style="text-align: center;"></p> <br>
 
 <!-- Collapsible Transactions Table -->
 <div id="transactions-container" class="collapse">
@@ -106,9 +110,23 @@
             <th>Item</th>
             <th>Cost</th>
             <th>Date</th>
+            <th>Category</th>
             <th>Notes</th>
             <th>Modify</th>
         </tr>
+
+
+<script>
+function confirmDelete(id) {
+  var txt;
+  if (confirm("Please Confirm")) {
+    txt = "You pressed OK for  " + id;
+  } else {
+    txt = "You pressed Cancel for: " + id;
+  }
+  document.getElementById("confirmDeleteButton").innerHTML = txt;
+}
+</script>
 
 <?php
 $loginData = json_decode(file_get_contents("login.json"), true);
@@ -124,7 +142,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, item, cost, date, notes FROM transactions ORDER BY date DESC";
+$sql = "SELECT id, item, cost, date, category, notes FROM transactions ORDER BY date DESC";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -135,8 +153,9 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row["item"] . "</td>";
         echo "<td>" . '$' . $row["cost"] . "</td>";
         echo "<td>" . $row["date"] . "</td>";
+        echo "<td>" . $row["category"] . "</td>";
         echo "<td>" . $row["notes"] . "</td>";
-        echo "<td><button type='button' class='my-button' onclick=\"alert('Hello world!')\"><i class='glyphicon glyphicon-remove'></i></button></td>";
+        echo "<td><button type='button' class='my-button' onclick=\"confirmDelete(" . $row["id"] . ")\"><i class='glyphicon glyphicon-remove'></i></button></td>";
         echo "</tr>";
     }
 } else {

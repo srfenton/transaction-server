@@ -1,0 +1,54 @@
+
+<!DOCTYPE HTML>
+<html>  
+<head>
+    <style>
+        form {
+            text-align: center;
+            display: inline;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            resize: none;
+        }           
+    </style>
+</head>
+<body>
+
+<form action="post_item.php" method="post">
+<input type="text" placeholder="item" name="item"><br><br>
+<input type="number" placeholder="cost" name="cost"><br><br>
+<select id="category" name="category" size="1">
+    <option value="none" selected disabled hidden > category </option>
+    <option value="Groceries">Groceries</option>
+    <option value="Utilities">Utilities</option>
+    <option value="Dining">Dining</option>
+    <option value="Fun">Fun</option>
+    <option value="Gifts">Gifts</option>
+    <option value="Tax">Tax</option>
+    <option value="Transportation">Transportation</option>
+    <option value="Travel">Travel</option>
+    <option value="Health & Beauty">Health & Beauty</option>
+        
+  </select><br><br>
+<input type="date" placeholder="date" name="date"><br><br>
+<select id="payment method" name="payment method" size="1">
+    <option value="none" selected disabled hidden > payment method </option>
+    <option value="Cash">Cash</option>
+    <option value="Credit">Credit</option>
+    <option value="Shared Expenses">Shared Expenses</option>
+</select><br><br>
+<textarea placeholder="comments" name="comments"></textarea> <br><br>
+
+<input type="submit">
+</form>
+<br><br>
+<a href="/">home</a>
+</body>
+</html>
