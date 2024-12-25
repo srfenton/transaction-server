@@ -102,6 +102,7 @@
 
 <br><p id="confirmDeleteButton" style="text-align: center;"></p> <br>
 
+
 <!-- Collapsible Transactions Table -->
 <div id="transactions-container" class="collapse">
     <table id="transactions">
@@ -111,8 +112,9 @@
             <th>Cost</th>
             <th>Date</th>
             <th>Category</th>
+            <th>Payment Method</th>
             <th>Notes</th>
-            <th>Modify</th>
+            <th>Remove</th>
         </tr>
 
 
@@ -142,7 +144,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, item, cost, date, category, notes FROM transactions ORDER BY date DESC";
+$sql = "SELECT id, item, cost,date, category, payment_method, notes FROM transactions ORDER BY date DESC";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -154,6 +156,7 @@ if ($result->num_rows > 0) {
         echo "<td>" . '$' . $row["cost"] . "</td>";
         echo "<td>" . $row["date"] . "</td>";
         echo "<td>" . $row["category"] . "</td>";
+        echo "<td>" . $row["payment_method"] . "</td>";
         echo "<td>" . $row["notes"] . "</td>";
         echo "<td><button type='button' class='my-button' onclick=\"confirmDelete(" . $row["id"] . ")\"><i class='glyphicon glyphicon-remove'></i></button></td>";
         echo "</tr>";
@@ -164,6 +167,7 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
     </table>
+</form>
 </div>
 
 </body>
