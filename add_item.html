@@ -18,13 +18,31 @@
             resize: none;
         }           
     </style>
+    <script>
+        function validateForm() {
+            const category = document.getElementById("category").value;
+            const paymentMethod = document.getElementById("payment_method").value;
+
+            if (category === "none") {
+                alert("Please select a valid category.");
+                return false;
+            }
+
+            if (paymentMethod === "none") {
+                alert("Please select a valid payment method.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </head>
 <body>
 
-<form action="post_item.php" method="post">
-<input type="text" placeholder="item" name="item"><br><br>
-<input type="number" placeholder="cost" name="cost"><br><br>
-<select id="category" name="category" size="1">
+<form action="post_item.php" method="post" onsubmit="return validateForm()">
+<input type="text" placeholder="item" name="item" required><br><br>
+<input type="number" placeholder="cost" name="cost" required><br><br>
+<select id="category" name="category" size="1" required>
     <option value="none" selected disabled hidden > category </option>
     <option value="Groceries">Groceries</option>
     <option value="Utilities">Utilities</option>
@@ -37,14 +55,14 @@
     <option value="Health & Beauty">Health & Beauty</option>
         
   </select><br><br>
-<input type="date" placeholder="date" name="date"><br><br>
-<select id="payment method" name="payment method" size="1">
+<input type="date" placeholder="date" name="date" required><br><br>
+<select id="payment_method" name="payment_method" size="1" required>
     <option value="none" selected disabled hidden > payment method </option>
     <option value="Cash">Cash</option>
     <option value="Credit">Credit</option>
     <option value="Shared Expenses">Shared Expenses</option>
 </select><br><br>
-<textarea placeholder="comments" name="comments"></textarea> <br><br>
+<textarea placeholder="notes" name="notes"></textarea> <br><br>
 
 <input type="submit">
 </form>
