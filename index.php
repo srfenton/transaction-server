@@ -84,6 +84,16 @@
     .my-button:hover i {
         color: red; /* Highlight color when hovered */
     }
+    @media (max-width: 768px) {
+        #transactions {
+            width: 100%;
+        }
+
+        .add-button, .toggle-button {
+            width: 100%;
+        }
+    }
+
     </style>
 </head>
 <body>
@@ -120,13 +130,13 @@
 
 <script>
 function confirmDelete(id) {
-  var txt;
-  if (confirm("Please Confirm")) {
-    txt = "You pressed OK for  " + id;
-  } else {
-    txt = "You pressed Cancel for: " + id;
-  }
-  document.getElementById("confirmDeleteButton").innerHTML = txt;
+    if (confirm("Are you sure you want to delete item ID " + id + "?")) {
+        document.getElementById("confirmDeleteButton").innerHTML = "You pressed OK for " + id;
+        return true;
+    } else {
+        document.getElementById("confirmDeleteButton").innerHTML = "You pressed Cancel for: " + id;
+        return false;
+    }
 }
 </script>
 
@@ -144,8 +154,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, item, cost,date, category, payment_method, notes FROM transactions ORDER BY date DESC";
-$result = $conn->query($sql);
+$stmt = $conn->prepare("SELECT id, item, cost, date, category, payment_method, notes FROM transactions ORDER BY date DESC");
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     // output data of each row using while loop
@@ -158,7 +169,14 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row["category"] . "</td>";
         echo "<td>" . $row["payment_method"] . "</td>";
         echo "<td>" . $row["notes"] . "</td>";
-        echo "<td><button type='button' class='my-button' onclick=\"confirmDelete(" . $row["id"] . ")\"><i class='glyphicon glyphicon-remove'></i></button></td>";
+        echo "<td>
+                <form method='POST' action='delete_item.php' onsubmit='return confirmDelete(" . $row["id"] . ")'>
+                    <input type='hidden' name='id' value='" . $row["id"] . "' />
+                    <button type='submit' class='my-button'>
+                        <i class='glyphicon glyphicon-remove'></i>
+                    </button>
+                </form>
+              </td>";
         echo "</tr>";
     }
 } else {
