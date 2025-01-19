@@ -43,8 +43,8 @@ workbook.xlsx.readFile(spreadsheetLocation.location)
 
             let date = rowArray[5];
             let formattedDate = moment.utc(date).format('YYYY-MM-DD'); // Format to YYYY-MM-DD
-            let duplicateCheckQuery = 'SELECT * FROM transactions WHERE id = ? AND cost = ?';
-            connection.query(duplicateCheckQuery, [rowArray[0], rowArray[2]], function(error, results, fields) {
+            let duplicateCheckQuery = 'SELECT * FROM transactions WHERE item = ? AND cost = ? AND category = ? AND payment_method = ? AND date = ?';
+            connection.query(duplicateCheckQuery, [rowArray[1], rowArray[2], rowArray[3], rowArray[4], formattedDate], function(error, results, fields) {
                 if (error) throw error;
                 if (results.length > 0) {
                     if (i === worksheet.rowCount) {
@@ -52,8 +52,8 @@ workbook.xlsx.readFile(spreadsheetLocation.location)
                         process.exit(0);
                     }
                 } else {
-                    let insertStatement = 'INSERT INTO transactions (id, item, cost, category, payment_method, date, notes) VALUES(?, ?, ?, ?, ?, ?, ?)';
-                    connection.query(insertStatement, [rowArray[0], rowArray[1], rowArray[2], rowArray[3], rowArray[4], formattedDate, rowArray[6]], function(error, results, fields) {
+                    let insertStatement = 'INSERT INTO transactions (item, cost, category, payment_method, date, notes) VALUES(?, ?, ?, ?, ?, ?)';
+                    connection.query(insertStatement, [rowArray[1], rowArray[2], rowArray[3], rowArray[4], formattedDate, rowArray[6]], function(error, results, fields) {
                         if (error) throw error;
                         console.log(`row insterted for ${rowArray[1]}`)
                         if (i === worksheet.rowCount-1) {
