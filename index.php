@@ -124,7 +124,8 @@
             <th>Category</th>
             <th>Payment Method</th>
             <th>Notes</th>
-            <th>Remove</th>
+            <th>Delete</th>
+            <th>Modify</th>
         </tr>
 
 
@@ -174,6 +175,15 @@ if ($result->num_rows > 0) {
                     <input type='hidden' name='id' value='" . $row["id"] . "' />
                     <button type='submit' class='my-button'>
                         <i class='glyphicon glyphicon-remove'></i>
+                    </button>
+                </form>
+              </td>";
+        // new column for editing items
+        echo "<td>
+                <form method='GET' action='modify_item.php'>
+                    <input type='hidden' name='id' value='" . $row["id"] . "' />
+                    <button type='submit' class='my-button'>
+                        <i class='glyphicon glyphicon-pencil'></i>
                     </button>
                 </form>
               </td>";
