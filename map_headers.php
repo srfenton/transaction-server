@@ -37,20 +37,28 @@ function normalize_costs($arr) {
     $normalized_array = [];
     echo "percentage of negatives: ";
     echo count($negatives) / count($arr);
-    if (count($negatives) / count($arr) > .5) {
+    if (count($negatives) / count($arr) >= .5) {
         foreach ($arr as $x) {
             if ($x < 0) {
                 $normalized_array[] = $x*-1;
-            } 
+            } else {
+                $normalized_array = 'skip this one';
+            }
         }
     } else {
-        
-        $normalized_array = $positives;
+        foreach ($arr as $x) {
+            if ($x > 0) {
+                $normalized_array[] = $x;
+            } else {
+                $normalized_array[] = 'skip this one';
+            }
+        }
     }
 
     return $normalized_array;
 
 }
+
 
 
 
@@ -62,7 +70,7 @@ if (isset($_POST['db_column_mapping']) && isset($_POST['transactions'])) {
     $costs = [];
     foreach ($transactions as $transaction) {
         if (isset($transaction[array_search('cost', $db_column_mapping)])) {
-            $costs[] = (float) $transaction[array_search('cost', $db_column_mapping)];
+            $costs[] = $transaction[array_search('cost', $db_column_mapping)];
         }
     }
 
@@ -85,9 +93,10 @@ if (isset($_POST['db_column_mapping']) && isset($_POST['transactions'])) {
         $item = $mapped_transaction["item"];
         
         // Use normalized cost
-        $cost = $normalized_costs[$cost_index++] ?? 0.0;
+        $cost = $normalized_costs[$cost_index++];
+        if ($cost == 'skip this one') continue;
 
-        $stmt = $conn->prepare("INSERT INTO confirmations (date, item, cost, user) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO confirmations (date, item, cost, user,shared_with) VALUES (?, ?, ?, ?, 'not shared')");
         if (!$stmt) {
             die("Prepare failed: " . $conn->error);
         }

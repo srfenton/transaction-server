@@ -103,12 +103,13 @@ CREATE TABLE confirmations (
     user INT NOT NULL,
     item VARCHAR(255) NOT NULL,
     cost DECIMAL(10, 2) NOT NULL,
-    date DATE NOT NULL
+    date DATE NOT NULL,
+    shared_with VARCHAR(255)
 );
 ///
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username INT NOT NULL
+    username varchar(255) NOT NULL
 );
 ///
