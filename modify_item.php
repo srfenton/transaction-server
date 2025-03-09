@@ -66,7 +66,7 @@ $result = $stmt->get_result();
 ?>
 
 //insert the results form the above query as placeholders.
-<form action="post_item.php" method="post" onsubmit="return validateForm()">
+<form action="update_item.php" method="post" onsubmit="return validateForm()">
 <input type="text" placeholder="item" name="item" required><br><br>
 <input type="number" placeholder="cost" name="cost" required><br><br>
 <select id="category" name="category" size="1" required>

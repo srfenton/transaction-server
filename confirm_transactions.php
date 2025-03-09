@@ -118,31 +118,10 @@
 </head>
 <body>
 
-<!-- Add Button -->
-<form action="/upload_test.php">
-        <button type="submit" class="action-button">
-            <i class="glyphicon glyphicon-upload"></i>
-        </button>
-    </form>
-
-    <form action="/analysis.html">
-        <button type="submit" class="action-button">
-            <i class="glyphicon glyphicon-stats"></i>
-        </button>
-    </form>
-
-    <form action="/add_item.html">
-        <button type="submit" class="action-button">
-            <i class="glyphicon glyphicon-plus"></i>
-        </button>
-    </form>
-
 <!-- Collapse Button -->
 <button class="toggle-button" style="display: block; margin: 0 auto; width: 80%;" data-toggle="collapse" data-target="#transactions-container">
     Transactions
 </button>
-
-<br><p id="confirmDeleteButton" style="text-align: center;"></p> <br>
 
 
 <!-- Collapsible Transactions Table -->
@@ -156,22 +135,10 @@
             <th>Category</th>
             <th>Payment Method</th>
             <th>Notes</th>
-            <th>Delete</th>
-            <th>Modify</th>
+            <th>Exclude?</th>
+            <th>Shared with?</th>
         </tr>
 
-
-<script>
-function confirmDelete(id) {
-    if (confirm("Are you sure you want to delete item ID " + id + "?")) {
-        document.getElementById("confirmDeleteButton").innerHTML = "You pressed OK for " + id;
-        return true;
-    } else {
-        document.getElementById("confirmDeleteButton").innerHTML = "You pressed Cancel for: " + id;
-        return false;
-    }
-}
-</script>
 
 <?php
 $loginData = json_decode(file_get_contents("login.json"), true);
@@ -187,9 +154,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$stmt = $conn->prepare("SELECT id, item, cost, date, category, payment_method, notes FROM transactions ORDER BY date DESC");
+$stmt = $conn->prepare("SELECT id, item, cost FROM confirmations ORDER BY date DESC");
 $stmt->execute();
 $result = $stmt->get_result();
+
+//this needs work
+$stmt2 = $conn->prepare("SELECT username FROM users ORDER BY username DESC");
+$stmt2->execute();
+$result2 = $stmt2->get_result();
 
 if ($result->num_rows > 0) {
     // output data of each row using while loop
@@ -199,30 +171,16 @@ if ($result->num_rows > 0) {
         echo "<td>" . $row["item"] . "</td>";
         echo "<td>" . '$' . $row["cost"] . "</td>";
         echo "<td>" . $row["date"] . "</td>";
-        echo "<td>" . $row["category"] . "</td>";
-        echo "<td>" . $row["payment_method"] . "</td>";
-        echo "<td>" . $row["notes"] . "</td>";
-        echo "<td>
-                <form method='POST' action='delete_item.php' onsubmit='return confirmDelete(" . $row["id"] . ")'>
-                    <input type='hidden' name='id' value='" . $row["id"] . "' />
-                    <button type='submit' class='my-button'>
-                        <i class='glyphicon glyphicon-remove'></i>
-                    </button>
-                </form>
-              </td>";
+        echo "<td>" . "category" . "</td>";
+        echo "<td>" . "payment_method" . "</td>";
+        echo "<td>" . "notes" . "<textarea></textarea placeholder='write notes in here please'>" .  "</td>";
+        echo "<td>"  . "exclude?" .  "</td>";
         // new column for editing items
-        echo "<td>
-                <form method='GET' action='modify_item.php'>
-                    <input type='hidden' name='id' value='" . $row["id"] . "' />
-                    <button type='submit' class='my-button'>
-                        <i class='glyphicon glyphicon-pencil'></i>
-                    </button>
-                </form>
-              </td>";
+        echo "<td>" . "shared with?" . "</td>";
         echo "</tr>";
     }
 } else {
-    echo "<tr><td colspan='6'>No results found</td></tr>";
+    header.location('/');
 }
 $conn->close();
 ?>
