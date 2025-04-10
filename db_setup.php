@@ -17,14 +17,17 @@ $host = $credentials['host'] ?? null;
 $user = $credentials['user'] ?? null;
 $password = $credentials['password'] ?? null;
 $database = $credentials['database'] ?? null;
-
+echo $user;
 // Validate credentials
 if (!$host || !$user || !isset($password) || !$database) {
     die("Error: Missing required credentials in login.json.\n");
 }
 
-// Connect to the MySQL server
+// Initialize connection variable
+$conn = null;
+
 try {
+    // Connect to the MySQL server
     $conn = new mysqli($host, $user, $password);
     
     if ($conn->connect_error) {
@@ -52,12 +55,12 @@ try {
     } else {
         die("Error dropping table: " . $conn->error . "\n");
     }
-    
+
     // Create the transactions table
     $sql = "CREATE TABLE transactions (
         id INT AUTO_INCREMENT NOT NULL,
         item VARCHAR(255) NOT NULL,
-        user NOT NULL INT,
+        user INT NOT NULL,
         cost DECIMAL(10,2) NOT NULL,
         category VARCHAR(255) NOT NULL,
         payment_method VARCHAR(255) NOT NULL,
@@ -65,51 +68,58 @@ try {
         notes TEXT,
         PRIMARY KEY (id)
     )";
-    
+    create_table($sql, 'transactions');
+
+    // Create the confirmations table
+    $sql = "CREATE TABLE confirmations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user INT NOT NULL,
+        item VARCHAR(255) NOT NULL,
+        cost DECIMAL(10, 2) NOT NULL,
+        date DATE NOT NULL,
+        shared_with VARCHAR(255)
+    );";
+    create_table($sql, 'confirmations');
+
+    // Create the users table
+    $sql = "CREATE TABLE users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL
+    );";
+    create_table($sql, 'users');
+
+} catch (Exception $e) {
+    die("An error occurred: " . $e->getMessage() . "\n");
+} finally {
+    // Close the connection if it was established
+    if ($conn) {
+        $conn->close();
+        echo "\nDatabase setup completed successfully.\n";
+    }
+}
+
+function create_table($sql, $table_name) {
+    global $conn; // Use the global connection variable
+
     if ($conn->query($sql) === TRUE) {
-        echo "Table 'transactions' created successfully.\n";
+        echo "Table '$table_name' created successfully.\n";
     } else {
         die("Error creating table: " . $conn->error . "\n");
     }
     
     // Verify the table structure
-    echo "\nTable structure for 'transactions':\n";
-    $result = $conn->query("DESCRIBE transactions");
+    echo "\nTable structure for $table_name:\n";
+    $result = $conn->query("DESCRIBE $table_name");
     
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             echo $row['Field'] . " - " . $row['Type'] . " - " . ($row['Null'] === "NO" ? "NOT NULL" : "NULL") . 
-                 ($row['Key'] === "PRI" ? " - PRIMARY KEY" : "") . 
-                 ($row['Extra'] === "auto_increment" ? " - AUTO_INCREMENT" : "") . "\n";
+                ($row['Key'] === "PRI" ? " - PRIMARY KEY" : "") . 
+                ($row['Extra'] === "auto_increment" ? " - AUTO_INCREMENT" : "") . "\n";
         }
     } else {
         echo "Error describing table: " . $conn->error . "\n";
     }
-    
-    // Close the connection
-    $conn->close();
-    echo "\nDatabase setup completed successfully.\n";
-    
-} catch (Exception $e) {
-    die("An error occurred: " . $e->getMessage() . "\n");
 }
 ?>
 
-///
-this needs :
-
-CREATE TABLE confirmations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user INT NOT NULL,
-    item VARCHAR(255) NOT NULL,
-    cost DECIMAL(10, 2) NOT NULL,
-    date DATE NOT NULL,
-    shared_with VARCHAR(255)
-);
-///
-
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username varchar(255) NOT NULL
-);
-///
