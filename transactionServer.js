@@ -1,5 +1,6 @@
 const moment = require('moment-timezone');
 const mysql = require('mysql');
+const fs = require('fs');
 const login = require('./login.json')
 const spreadsheetLocation = require('./spreadsheet-location.json')
 const ExcelJS = require('exceljs');
@@ -14,6 +15,7 @@ const connection = mysql.createConnection({
 
 
 const workbook = new ExcelJS.Workbook();
+
 
 // Load an existing workbook
 workbook.xlsx.readFile(spreadsheetLocation.location)
@@ -52,7 +54,7 @@ workbook.xlsx.readFile(spreadsheetLocation.location)
                         process.exit(0);
                     }
                 } else {
-                    let insertStatement = 'INSERT INTO transactions (item, cost, category, payment_method, date, notes) VALUES(?, ?, ?, ?, ?, ?)';
+                    let insertStatement = 'INSERT INTO transactions (item, cost, category, payment_method, date, notes, user) VALUES(?, ?, ?, ?, ?, ?, 1)';
                     connection.query(insertStatement, [rowArray[1], rowArray[2], rowArray[3], rowArray[4], formattedDate, rowArray[6]], function(error, results, fields) {
                         if (error) throw error;
                         console.log(`row insterted for ${rowArray[1]}`)

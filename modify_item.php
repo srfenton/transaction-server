@@ -62,15 +62,17 @@ if (!$stmt) {
 }
 $stmt->execute();
 $result = $stmt->get_result(); 
+// Fetch the data
+$data = $result->fetch_assoc();
 
 ?>
 
-//insert the results form the above query as placeholders.
 <form action="update_item.php" method="post" onsubmit="return validateForm()">
-<input type="text" placeholder="item" name="item" required><br><br>
-<input type="number" placeholder="cost" name="cost" required><br><br>
-<select id="category" name="category" size="1" required>
-    <option value="none" selected disabled hidden > category </option>
+<input type="hidden" name="id" value="<?php echo htmlspecialchars($data['id']); ?>" required>   
+<input type="text" placeholder="item" name="item" value="<?php echo htmlspecialchars($data['item']); ?>" required><br><br>
+<input type="number" placeholder="cost" name="cost" value="<?php echo htmlspecialchars($data['cost']);?>" required><br><br>
+<select id="category" name="category" size="1" value="<?php echo htmlspecialchars($data['category']); ?>" required>
+    <!--<option value="none" selected disabled hidden > category </option>-->
     <option value="Cash Withdrawal">Cash Withdrawal</option>
     <option value="Dining">Dining</option>
     <option value="Education">Utilities</option>
@@ -87,14 +89,14 @@ $result = $stmt->get_result();
     <option value="Utilities">Utilities</option>
         
   </select><br><br>
-<input type="date" placeholder="date" name="date" required><br><br>
-<select id="payment_method" name="payment_method" size="1" required>
-    <option value="none" selected disabled hidden > payment method </option>
+<input type="date" placeholder="date" name="date" value="<?php echo htmlspecialchars($data['date']); ?>" required><br><br>
+<select id="payment_method" name="payment_method" size="1" value="<?php echo htmlspecialchars($data['payment_method']); ?>" required>
+    <!--<option value="none" selected disabled hidden > payment method </option> -->
     <option value="Cash">Cash</option>
     <option value="Credit">Credit</option>
     <option value="Shared Expenses">Shared Expenses</option>
 </select><br><br>
-<textarea placeholder="notes" name="notes"></textarea> <br><br>
+<textarea placeholder="notes" name="notes"><?php echo htmlspecialchars($data['notes']); ?></textarea> <br><br>
 
 <input type="submit">
 </form>

@@ -9,7 +9,7 @@ $dbname = $loginData["database"];
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $mysqli = new mysqli($servername, $username, $password, $dbname);
 
-$stmt = $mysqli->prepare("INSERT INTO transactions (item, cost, category, payment_method, date, notes) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $mysqli->prepare("INSERT INTO transactions (user, item, cost, category, payment_method, date, notes) VALUES (1,?, ?, ?, ?, ?, ?)"); //this will need updated for getting the user from the request
 $stmt->bind_param('sdssss', $item, $cost, $category, $payment_method, $date, $notes);
 if (!$stmt) {
     die("Prepare failed: " . $mysqli->error);

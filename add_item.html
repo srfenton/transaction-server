@@ -41,7 +41,7 @@
 
 <form action="post_item.php" method="post" onsubmit="return validateForm()">
 <input type="text" placeholder="item" name="item" required><br><br>
-<input type="number" placeholder="cost" name="cost" required><br><br>
+<input type="number" placeholder="cost" name="cost" step="any" required><br><br>
 <select id="category" name="category" size="1" required>
     <option value="none" selected disabled hidden > category </option>
     <option value="Cash Withdrawal">Cash Withdrawal</option>

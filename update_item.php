@@ -9,7 +9,7 @@ $dbname = $loginData["database"];
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $mysqli = new mysqli($servername, $username, $password, $dbname);
 
-$stmt = $mysqli->prepare("Update transactions set item = ?, cost = ?, category = ?, payment_method =?, date = ?, notes = ?) WHERE id = ? ");
+$stmt = $mysqli->prepare("Update transactions set item = ?, cost = ?, category = ?, payment_method =?, date = ?, notes = ? WHERE id = ? ");
 $stmt->bind_param('sdssssd', $item, $cost, $category, $payment_method, $date, $notes, $id);
 if (!$stmt) {
     die("Prepare failed: " . $mysqli->error);
