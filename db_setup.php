@@ -49,7 +49,7 @@ try {
     echo "Using database: $database\n";
     
     // Drop the table if it exists
-    $sql = "DROP TABLE IF EXISTS transactions confirmations users";
+    $sql = "DROP TABLE IF EXISTS transactions, confirmations, users";
     if ($conn->query($sql) === TRUE) {
         echo "Table 'transactions' dropped (if it existed).\n";
     } else {
